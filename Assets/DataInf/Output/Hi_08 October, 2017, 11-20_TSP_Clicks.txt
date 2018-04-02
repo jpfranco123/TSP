@@ -1,0 +1,3 @@
+PartcipantID:Hi
+InitialTimeStamp:11-21-02-086
+block;trial;citynumber(100=Reset);In(1)/Out(0)/Reset(3);time
