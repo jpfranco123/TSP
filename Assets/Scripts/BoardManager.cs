@@ -10,9 +10,6 @@ using Random = UnityEngine.Random;
 // This Script (a component of Game Manager) Initializes the Borad (i.e. screen).
 public class BoardManager : MonoBehaviour {
 
-
-
-
 	//Resoultion width and Height
 	//CAUTION! Modifying this does not modify the Screen resolution. This is related to the unit grid on Unity.
 	public static int resolutionWidth = 1024;
@@ -21,12 +18,6 @@ public class BoardManager : MonoBehaviour {
 	//Number of Columns and rows of the grid (the possible positions of the Items) note: these are default values.
 	public static int columns = 4;
 	public static int rows = 4;
-
-	//The Item radius. This is used to avoid superposition of Items.
-	//public static float KSItemRadius = 1.5f;
-
-	//Timer width
-	//public static float timerWidth =400;
 
 	//A canvas where all the board is going to be placed
 	private GameObject canvas;
@@ -74,12 +65,7 @@ public class BoardManager : MonoBehaviour {
 
 	//Structure with the relevant parameters of an Item.
 	//gameItem: is the game object
-	//coorValue1: The coordinates of one of the corners of the encompassing rectangle of the Value Part of the Item. The coordinates are taken relative to the center of the Item.
-	//coorValue2: The coordinates of the diagonally opposite corner of the Value Part of the Item.
-	//coordWeight1 and coordWeight2: Same as before but for the weight part of the Item.
-	//botncitoW: button attached to the weight
-	//botncitoV: button attached to the Value (Bill)
-	//ItemNumber: a number between 1 and the number of Items. It corresponds to the index in the weight's (and value's) vector.
+	//66: ItemNumber: a number between 1 and the number of Items. It corresponds to the index in the weight's (and value's) vector.
 	private struct Item
 	{
 		public GameObject gameItem;
@@ -144,13 +130,9 @@ public class BoardManager : MonoBehaviour {
 	{
 		int randInstance = GameManager.instanceRandomization[GameManager.TotalTrial-1];
 
-		//		Text Quest = GameObject.Find("Question").GetComponent<Text>();
-		//		String question = "Can you obtain at least $" + GameManager.satinstances[randInstance].profit + " with at most " + GameManager.satinstances[randInstance].capacity +"kg?";
-		//		Quest.text = question;
-
 		//necessary?
 		//question = "Can you pack $" + GameManager.satinstances[randInstance].profit + " if your capacity is " + GameManager.satinstances[randInstance].capacity +"kg?";
-		question = "Max: " + GameManager.tspinstances[randInstance].maxdistance +"km";
+		question = "Max: " + GameManager.game_instances[randInstance].maxdistance +"km";
 		Text Quest = GameObject.Find("Question").GetComponent<Text>();
 		Quest.text = question;
 		DistanceText = GameObject.Find ("DistanceText").GetComponent<Text>();
@@ -159,12 +141,12 @@ public class BoardManager : MonoBehaviour {
 
 		//question = " Max: " + System.Environment.NewLine + GameManager.satinstances[randInstance].capacity +"kg ";
 
-		cox = GameManager.tspinstances [randInstance].coordinatesx;
-		coy = GameManager.tspinstances [randInstance].coordinatesy;
+		cox = GameManager.game_instances [randInstance].coordinatesx;
+		coy = GameManager.game_instances [randInstance].coordinatesy;
 		unitycoord = coordinateconvertor(cox,coy);
 
-		cities = GameManager.tspinstances [randInstance].cities;
-		distances = GameManager.tspinstances [randInstance].distancematrix;
+		cities = GameManager.game_instances [randInstance].cities;
+		distances = GameManager.game_instances [randInstance].distancematrix;
 
 		TSPItemPrefab = (GameObject)Resources.Load ("TSPItem");
 		LineItemPrefab = (GameObject)Resources.Load ("LineButton");
@@ -276,7 +258,7 @@ public class BoardManager : MonoBehaviour {
 
 		if (GameManager.escena == "Trial") {
 			if (Input.GetKeyDown (KeyCode.UpArrow)) {
-				GameManager.saveTimeStamp ("ParticipantSkip");
+				InputOutputManager.saveTimeStamp ("ParticipantSkip");
 				GameManager.changeToNextScene (itemClicks,0,0);
 			}
 		} else if (GameManager.escena == "TrialAnswer") 
@@ -355,8 +337,6 @@ public class BoardManager : MonoBehaviour {
 	}
 
 
-
-
 	//necessary?
 	//Randomizes YES/NO button positions (left or right) and allocates corresponding script to save the correspondent answer.
 	//1: No/Yes 0: Yes/No
@@ -379,8 +359,6 @@ public class BoardManager : MonoBehaviour {
 			btnRight.GetComponentInChildren<Text>().text = "No";
 		}
 	}
-
-
 
 	//previouscities and addcity based on http://answers.unity3d.com/questions/906057/adding-gameobjects-to-a-list.html
 	public List<int> previouscities = new List<int> ();
@@ -471,8 +449,6 @@ public class BoardManager : MonoBehaviour {
 
 	}
 
-	//Reset.onClick.AddListener(ResetClicked);
-
 
 	// The list of all the button clicks on items. Each event contains the following information:
 	// ItemNumber (a number between 1 and the number of items. It corresponds to the index in the weight's (and value's) vector.)
@@ -521,7 +497,6 @@ public class BoardManager : MonoBehaviour {
 		citiesvisited --;
 		SetDistanceText ();
 
-//		Debug.Log ("Destroy");
 	}
 		
 

@@ -64,7 +64,7 @@ public class SceneManagerFunctions : MonoBehaviour {
 		//pIDT.SetActive (false);
 
 		//Set Participant ID
-		GameManager.participantID=pIDs;
+		InputOutputManager.participantID=pIDs;
 
 		//Activate Randomisation Listener
 		rand.SetActive (true);
@@ -88,7 +88,7 @@ public class SceneManagerFunctions : MonoBehaviour {
 		pIDT.SetActive (false);
 
 		//Set Participant ID
-		GameManager.randomisationID=rIDs;
+		InputOutputManager.randomisationID=rIDs;
 
 		//Activate Start Button and listener
 		//GameObject start = GameObject.Find("Start");
@@ -106,7 +106,7 @@ public class SceneManagerFunctions : MonoBehaviour {
 		if (( Input.GetKey (KeyCode.LeftAlt) || Input.GetKey (KeyCode.RightAlt)) && Input.GetKeyDown (KeyCode.P) ){
 			Time.timeScale = (Time.timeScale == 1) ? 0 : 1;
 			if(Time.timeScale==1){
-				GameManager.errorInScene("Pause");
+				InputOutputManager.errorInScene("Pause");
 			}
 		}
 	}
@@ -134,6 +134,27 @@ public class SceneManagerFunctions : MonoBehaviour {
 		return stamp;
 	}
 
+	//Randomizes The Location of the Yes/No button for a whole block.
+	public static int[] randomizeButtons(int numberOfTrials)
+	{
+		
+		int[] buttonRandomization = new int[numberOfTrials];
+		List<int> buttonRandomizationTemp = new List<int> ();
+		for (int i = 0; i < numberOfTrials; i++){
+			if (i % 2 == 0) {
+				buttonRandomizationTemp.Add(0);
+			} else {
+				buttonRandomizationTemp.Add(1);
+			}
+		}
+		for (int i = 0; i < numberOfTrials; i++) {
+			int randomIndex = Random.Range (0, buttonRandomizationTemp.Count);
+			buttonRandomization [i] = buttonRandomizationTemp [randomIndex];
+			buttonRandomizationTemp.RemoveAt (randomIndex);
+		}
+
+		return buttonRandomization;
+	}
 		
 
 
