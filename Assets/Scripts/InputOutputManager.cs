@@ -26,6 +26,7 @@ public class InputOutputManager : MonoBehaviour {
 	private static string inputFolderInstances = "/DATAinf/Input/Instances/";
 	private static string outputFolder = "/DATAinf/Output/";
 
+	// Complete folder path of the inputs and ouputs
 	private static string folderPathLoad;
 	private static string folderPathLoadInstances;
 	private static string folderPathSave;
@@ -48,8 +49,12 @@ public class InputOutputManager : MonoBehaviour {
 		folderPathLoad = Application.dataPath + inputFolder;
 		folderPathLoadInstances = Application.dataPath + inputFolderInstances;
 		folderPathSave = Application.dataPath + outputFolder;
-		
-		loadParameters ();
+
+		Dictionary<string, string> dict = loadParameters ();
+		GameManager.assignVariables(dict);
+		BoardManager.assignVariables(dict);
+
+
 		GameManager.game_instances = loadInstances (GameManager.numberOfInstances);
 		saveInstanceInfo (GameManager.numberOfInstances, GameManager.game_instances);
 		saveHeaders ();
@@ -84,7 +89,7 @@ public class InputOutputManager : MonoBehaviour {
 	}
 
 	//Loads the parameters from the text files: param.txt and layoutParam.txt
-	private static void loadParameters()
+	private static Dictionary<string, string> loadParameters()
 	{
 
 		var dict = new Dictionary<string, string>();
@@ -142,9 +147,7 @@ public class InputOutputManager : MonoBehaviour {
 			Debug.Log ("The file could not be read:");
 			Debug.Log (e.Message);
 		}
-
-		GameManager.assignVariables(dict);
-
+		return dict;
 	}
 
 
@@ -279,7 +282,7 @@ public class InputOutputManager : MonoBehaviour {
 		// Time Stamps file headers
 		string[] lines1 = new string[3];
 		lines1[0]="PartcipantID:" + participantID;
-		lines1[1] = "InitialTimeStamp:" + SceneManagerFunctions.initialTimeStamp;
+		lines1[1] = "InitialTimeStamp:" + GameFunctions.initialTimeStamp;
 		lines1[2]="block;trial;eventType;elapsedTime";
 		using (StreamWriter outputFile = new StreamWriter(folderPathSave + identifierName + "TimeStamps.txt",true)) 
 		{
@@ -290,7 +293,7 @@ public class InputOutputManager : MonoBehaviour {
 		//Headerds for Clicks file
 		string[] lines2 = new string[3];
 		lines2[0]="PartcipantID:" + participantID;
-		lines2[1] = "InitialTimeStamp:" + SceneManagerFunctions.initialTimeStamp;
+		lines2[1] = "InitialTimeStamp:" + GameFunctions.initialTimeStamp;
 		lines2[2]="block;trial;citynumber(100=Reset);In(1)/Out(0)/Reset(3);time"; 
 		using (StreamWriter outputFile = new StreamWriter(folderPathSave + identifierName + "Clicks.txt",true)) {
 			foreach (string line in lines2)
@@ -305,8 +308,6 @@ public class InputOutputManager : MonoBehaviour {
 	//Each line in the File has the following structure: "trial;answer;timeSpent".
 	public static void save(string itemsSelected, int answer, float timeSpent, int randomYes, string error) 
 	{
-		//disregard this...string xyCoordinates = instance.boardScript.getItemCoordinates ();//BoardManager.getItemCoordinates ();
-
 		//Get the instance number for this trial (take the block number, subtract 1 because indexing starts at 0. Then multiply it
 		//by numberOfTrials (i.e. 10, 10 per block) and add the trial number of this block. Thus, the 2nd trial of block 2 will be
 		//instance number 12 overall) and add 1 because the instanceRandomization is linked to array numbering in C#, which starts at 0;
@@ -346,7 +347,7 @@ public class InputOutputManager : MonoBehaviour {
 	/// Event type: 1=ItemsNoQuestion;11=ItemsWithQuestion;2=AnswerScreen;21=ParticipantsAnswer;3=InterTrialScreen;4=InterBlockScreen;5=EndScreen
 	public static void saveTimeStamp(string eventType) 
 	{
-		string dataTrialText = GameManager.block + ";" + GameManager.trial + ";" + eventType + ";" + SceneManagerFunctions.timeStamp();
+		string dataTrialText = GameManager.block + ";" + GameManager.trial + ";" + eventType + ";" + GameFunctions.timeStamp();
 
 		string[] lines = {dataTrialText};
 		string folderPathSave = Application.dataPath + outputFolder;
@@ -359,9 +360,7 @@ public class InputOutputManager : MonoBehaviour {
 		}
 
 	}
-
-
-
+		
 
 	/// <summary>
 	/// Saves the time stamp of every click made on the items 
@@ -400,9 +399,6 @@ public class InputOutputManager : MonoBehaviour {
 		InputOutputManager.save ("", answer, GameManager.timeTrial, randomYes, errorDetails);
 		GameManager.changeToNextTrial ();
 	}
-
-
-
-
+		
 
 }

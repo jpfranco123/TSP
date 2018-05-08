@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
-public class SceneManagerFunctions : MonoBehaviour {
+public class GameFunctions : MonoBehaviour {
 
 	//Can copy this code if time stamps are needed (likely) Stopwatch to calculate time of events.
 	private static System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
@@ -23,7 +23,7 @@ public class SceneManagerFunctions : MonoBehaviour {
 		
 	}
 
-	public void setupInitialScreen()
+	public static void setupInitialScreen()
 	{
 		//Button 
 		Debug.Log("Start button");
@@ -55,7 +55,7 @@ public class SceneManagerFunctions : MonoBehaviour {
 
 	}
 
-	public void submitPID(string pIDs, GameObject start, GameObject rand)
+	private static void submitPID(string pIDs, GameObject start, GameObject rand)
 	{
 		//Debug.Log (pIDs);
 
@@ -78,7 +78,7 @@ public class SceneManagerFunctions : MonoBehaviour {
 
 	}
 
-	public void submitRandID(string rIDs, GameObject start)
+	private static void submitRandID(string rIDs, GameObject start)
 	{
 		//Debug.Log (pIDs);
 
@@ -102,7 +102,7 @@ public class SceneManagerFunctions : MonoBehaviour {
 	//Warning! When Unpausing the following happens:
 	//If paused/unpaused in scene 1 or 2 (while items are shown or during answer time) then saves the trialInfo with an error: "pause" without information on the items selected.
 	//If paused/unpaused on ITI or IBI then it generates a new row in trial Info with an error ("pause"). i.e. there are now 2 rows for the trial.
-	public void pauseManager(){
+	public static void pauseManager(){
 		if (( Input.GetKey (KeyCode.LeftAlt) || Input.GetKey (KeyCode.RightAlt)) && Input.GetKeyDown (KeyCode.P) ){
 			Time.timeScale = (Time.timeScale == 1) ? 0 : 1;
 			if(Time.timeScale==1){
