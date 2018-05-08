@@ -86,10 +86,7 @@ public class GameManager : MonoBehaviour
 	private static string outputFolder = "/DATAinf/Output/";
 
 
-	//Can copy this code if time stamps are needed (likely) Stopwatch to calculate time of events.
-	private static System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
-	// Time at which the stopwatch started. Time of each event is calculated according to this moment.
-	private static string initialTimeStamp;
+
 
 	//The order of the left/right No/Yes randomization
 	public static int[] buttonRandomization;
@@ -221,29 +218,9 @@ public class GameManager : MonoBehaviour
 		if (escena != "SetUp") 
 		{
 			startTimer ();
-			pauseManager ();
+			smf.pauseManager ();
 		}
 	}
-
-	//To pause press alt+p
-	//Pauses/Unpauses the game. Unpausing take syou directly to next trial
-	//Warning! When Unpausing the following happens:
-	//If paused/unpaused in scene 1 or 2 (while items are shown or during answer time) then saves the trialInfo with an error: "pause" without information on the items selected.
-	//If paused/unpaused on ITI or IBI then it generates a new row in trial Info with an error ("pause"). i.e. there are now 2 rows for the trial.
-	private void pauseManager(){
-		if (( Input.GetKey (KeyCode.LeftAlt) || Input.GetKey (KeyCode.RightAlt)) && Input.GetKeyDown (KeyCode.P) ){
-			Time.timeScale = (Time.timeScale == 1) ? 0 : 1;
-			if(Time.timeScale==1){
-				errorInScene("Pause");
-			}
-		}
-	}
-
-
-
-
-
-	//instances info .txt files seem to be working perfectly, trial info mistakenly labels each instance as the on after it, timestamps don't work at all
 
 
 
@@ -301,7 +278,7 @@ public class GameManager : MonoBehaviour
 		// Time Stamps file headers
 		string[] lines1 = new string[3];
 		lines1[0]="PartcipantID:" + participantID;
-		lines1[1] = "InitialTimeStamp:" + initialTimeStamp;
+		lines1[1] = "InitialTimeStamp:" + SceneManagerFunctions.initialTimeStamp;
 		lines1[2]="block;trial;eventType;elapsedTime";
 		using (StreamWriter outputFile = new StreamWriter(folderPathSave + identifierName + "TimeStamps.txt",true)) 
 		{
@@ -312,7 +289,7 @@ public class GameManager : MonoBehaviour
 		//Headerds for Clicks file
 		string[] lines2 = new string[3];
 		lines2[0]="PartcipantID:" + participantID;
-		lines2[1] = "InitialTimeStamp:" + initialTimeStamp;
+		lines2[1] = "InitialTimeStamp:" + SceneManagerFunctions.initialTimeStamp;
 		lines2[2]="block;trial;citynumber(100=Reset);In(1)/Out(0)/Reset(3);time"; 
 		using (StreamWriter outputFile = new StreamWriter(folderPathSave + identifierName + "Clicks.txt",true)) {
 			foreach (string line in lines2)
@@ -368,8 +345,7 @@ public class GameManager : MonoBehaviour
 	/// Event type: 1=ItemsNoQuestion;11=ItemsWithQuestion;2=AnswerScreen;21=ParticipantsAnswer;3=InterTrialScreen;4=InterBlockScreen;5=EndScreen
 	public static void saveTimeStamp(string eventType) 
 	{
-		//				string dataTrialText = /* block + ";" + */ trial + ";" + eventType + ";" + timeStamp();
-		string dataTrialText = block + ";" + trial + ";" + eventType + ";" + timeStamp();
+		string dataTrialText = block + ";" + trial + ";" + eventType + ";" + SceneManagerFunctions.timeStamp();
 
 		string[] lines = {dataTrialText};
 		string folderPathSave = Application.dataPath + outputFolder;
@@ -408,13 +384,7 @@ public class GameManager : MonoBehaviour
 		} 
 
 	}
-
-
-
-
-
-
-
+		
 
 
 	/*
@@ -440,11 +410,6 @@ public class GameManager : MonoBehaviour
 			//string[] KPInstanceText = new string[linesInEachKPInstance];
 			try {   // Open the text file using a stream reader.
 				using (StreamReader sr = new StreamReader (folderPathLoad + "i"+ k + ".txt")) {
-					//					for (int i = 0; i < linesInEachKPInstance; i++) {
-					//						string line = sr.ReadLine ();
-					//						string[] dataInLine = line.Split (':');
-					//						TSPInstanceText [i] = dataInLine [1];
-					//					}
 					string line;
 					while (!string.IsNullOrEmpty ((line = sr.ReadLine ()))) {
 						string[] tmp = line.Split (new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
@@ -648,24 +613,6 @@ public class GameManager : MonoBehaviour
 
 	}
 
-
-
-
-
-//	//66: Wrong function: items are repeated.
-//	//Randomizes the sequence of Instances to be shown to the participant adn stores it in: instanceRandomization
-//	void RandomizeTSPInstances()
-//	{
-//		//		instanceRandomization = new int[numberOfTrials/**numberOfBlocks*/];
-//		//		for (int i = 0; i < numberOfTrials/**numberOfBlocks*/; i++) 
-//		instanceRandomization = new int[numberOfTrials*numberOfBlocks];
-//		for (int i = 0; i < numberOfTrials*numberOfBlocks; i++) 
-//		{
-//			instanceRandomization[i] = Random.Range(0,numberOfInstances);
-//		}
-//	}
-//
-
 	//Takes care of changing the Scene to the next one (Except for when in the setup scene)
 	public static void changeToNextScene(List <Vector3> itemClicks, int answer, int randomYes)
 	{
@@ -756,35 +703,7 @@ public class GameManager : MonoBehaviour
 			buttonRandomizationTemp.RemoveAt (randomIndex);
 		}
 	}
-
-
-
-	/// <summary>
-	/// Starts the stopwatch. Time of each event is calculated according to this moment.
-	/// Sets "initialTimeStamp" to the time at which the stopwatch started.
-	/// </summary>
-	public static void setTimeStamp()
-	{
-		initialTimeStamp=@System.DateTime.Now.ToString("HH-mm-ss-fff");
-		stopWatch.Start ();
-		Debug.Log (initialTimeStamp);
-	}
-
-	/// <summary>
-	/// Calculates time elapsed
-	/// </summary>
-	/// <returns>The time elapsed in milliseconds since the "setTimeStamp()".</returns>
-	private static string timeStamp()
-	{
-		//		TimeSpan ts = stopWatch.Elapsed;
-		//		string stamp = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
-		//			ts.Hours, ts.Minutes, ts.Seconds,
-		//			ts.Milliseconds / 10);
-		long milliSec = stopWatch.ElapsedMilliseconds;
-		string stamp = milliSec.ToString();
-		return stamp;
-	}
-
+		
 
 	//Updates the timer (including the graphical representation)
 	//If time runs out in the trial or the break scene. It switches to the next scene.
@@ -795,8 +714,6 @@ public class GameManager : MonoBehaviour
 		if (showTimer) 
 		{
 			boardScript.updateTimer();
-			//	RectTransform timer = GameObject.Find ("Timer").GetComponent<RectTransform> ();
-			//	timer.sizeDelta = new Vector2 (timerWidth * (tiempo / timeTrial), timer.rect.height);
 		}
 
 		//When the time runs out:
@@ -814,16 +731,12 @@ public class GameManager : MonoBehaviour
 	/// Receives as input a string with the errorDetails which is saved in the output file.
 	public static void errorInScene(string errorDetails){
 		Debug.Log (errorDetails);
-
 		BoardManager.keysON = false;
 		int answer = 3;
 		int randomYes = -1;
-		save ("", answer, timeTrial, randomYes, errorDetails);
+		GameManager.save ("", answer, timeTrial, randomYes, errorDetails);
 		changeToNextTrial ();
 	}
 
 
 }
-/*3644 to 3969
- * 3407 to 3677
- * 3973 to 4145*/

@@ -290,7 +290,7 @@ public class BoardManager : MonoBehaviour {
 					answer=0;
 					GameObject boto = GameObject.Find("LEFTbutton") as GameObject;
 					highlightButton(boto);
-					GameManager.setTimeStamp ();
+					SceneManagerFunctions.setTimeStamp ();
 					GameManager.changeToNextScene (itemClicks,0,1);
 				} else if (Input.GetKeyDown (KeyCode.RightArrow)) {
 					//Right
@@ -299,7 +299,7 @@ public class BoardManager : MonoBehaviour {
 					answer=1;
 					GameObject boto = GameObject.Find("RIGHTbutton") as GameObject;
 					highlightButton(boto);
-					GameManager.setTimeStamp ();
+					SceneManagerFunctions.setTimeStamp ();
 					GameManager.changeToNextScene (itemClicks,1,1);
 				}
 			} else if (randomYes == 0) {
@@ -310,7 +310,7 @@ public class BoardManager : MonoBehaviour {
 					answer=1;
 					GameObject boto = GameObject.Find("LEFTbutton") as GameObject;
 					highlightButton(boto);
-					GameManager.setTimeStamp ();
+					SceneManagerFunctions.setTimeStamp ();
 					GameManager.changeToNextScene (itemClicks,1,0);
 				} else if (Input.GetKeyDown (KeyCode.RightArrow)) {
 					//Right
@@ -319,13 +319,13 @@ public class BoardManager : MonoBehaviour {
 					answer = 0;
 					GameObject boto = GameObject.Find("RIGHTbutton") as GameObject;
 					highlightButton(boto);
-					GameManager.setTimeStamp ();
+					SceneManagerFunctions.setTimeStamp ();
 					GameManager.changeToNextScene (itemClicks,0,0);
 				}
 			}
 		} else if (GameManager.escena == "SetUp") {
 			if (Input.GetKeyDown (KeyCode.Space)) {
-				GameManager.setTimeStamp ();
+				SceneManagerFunctions.setTimeStamp ();
 				GameManager.changeToNextScene (itemClicks,0,0);
 			}
 		}
@@ -338,86 +338,10 @@ public class BoardManager : MonoBehaviour {
 	}
 		
 
-
-//	public void setupInitialScreen()
-//	{
-//		//Button 
-//		Debug.Log("Start button");
-//		GameObject start = GameObject.Find("Start") as GameObject;
-//		start.SetActive (false);
-//
-//		Debug.Log("Rand button");
-//		GameObject rand = GameObject.Find("RandomisationID") as GameObject;
-//		rand.SetActive (false);
-//
-//		//Participant Input
-//		InputField pID = GameObject.Find ("ParticipantID").GetComponent<InputField>();
-//
-//		InputField.SubmitEvent se = new InputField.SubmitEvent();
-//		//se.AddListener(submitPID(start));
-//		se.AddListener((value)=>submitPID(value,start,rand));
-//		pID.onEndEdit = se;
-//
-//
-//		//Randomisation Input
-//		InputField rID = rand.GetComponent<InputField>();
-//
-//		InputField.SubmitEvent se2 = new InputField.SubmitEvent();
-//		//se.AddListener(submitPID(start));
-//		se2.AddListener((value)=>submitRandID(value,start));
-//		rID.onEndEdit = se2;
-//
-//		//pID.onSubmit.AddListener((value) => submitPID(value));
-//
-//	}
-//
-//	private void submitPID(string pIDs, GameObject start, GameObject rand)
-//	{
-//		//Debug.Log (pIDs);
-//
-//		GameObject pID = GameObject.Find ("ParticipantID");
-//		pID.SetActive (false);
-//		//pIDT.SetActive (false);
-//
-//		//Set Participant ID
-//		GameManager.participantID=pIDs;
-//
-//		//Activate Randomisation Listener
-//		rand.SetActive (true);
-//
-//
-//
-//		//Activate Start Button and listener
-//		//GameObject start = GameObject.Find("Start");
-//		//start.SetActive (true);
-//		//keysON = true;
-//
-//	}
-//
-//	private void submitRandID(string rIDs, GameObject start)
-//	{
-//		//Debug.Log (pIDs);
-//
-//		GameObject rID = GameObject.Find ("RandomisationID");
-//		GameObject pIDT = GameObject.Find ("Participant ID Text");
-//		rID.SetActive (false);
-//		pIDT.SetActive (false);
-//
-//		//Set Participant ID
-//		GameManager.randomisationID=rIDs;
-//
-//		//Activate Start Button and listener
-//		//GameObject start = GameObject.Find("Start");
-//		start.SetActive (true);
-//		keysON = true;
-//
-//	}
-		
-
 	// Use this for initialization
 	void Start () 
 	{
-		//GameManager.saveTimeStamp(GameManager.escena);
+
 	}
 
 	// Update is called once per frame

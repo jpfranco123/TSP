@@ -8,8 +8,10 @@ using Random = UnityEngine.Random;
 
 public class SceneManagerFunctions : MonoBehaviour {
 
-	//Should the key be working?
-	//public static bool keysON = false;
+	//Can copy this code if time stamps are needed (likely) Stopwatch to calculate time of events.
+	private static System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
+	// Time at which the stopwatch started. Time of each event is calculated according to this moment.
+	public static string initialTimeStamp;
 
 	// Use this for initialization
 	void Start () {
@@ -94,6 +96,45 @@ public class SceneManagerFunctions : MonoBehaviour {
 		BoardManager.keysON = true;
 
 	}
+
+	//To pause press alt+p
+	//Pauses/Unpauses the game. Unpausing take syou directly to next trial
+	//Warning! When Unpausing the following happens:
+	//If paused/unpaused in scene 1 or 2 (while items are shown or during answer time) then saves the trialInfo with an error: "pause" without information on the items selected.
+	//If paused/unpaused on ITI or IBI then it generates a new row in trial Info with an error ("pause"). i.e. there are now 2 rows for the trial.
+	public void pauseManager(){
+		if (( Input.GetKey (KeyCode.LeftAlt) || Input.GetKey (KeyCode.RightAlt)) && Input.GetKeyDown (KeyCode.P) ){
+			Time.timeScale = (Time.timeScale == 1) ? 0 : 1;
+			if(Time.timeScale==1){
+				GameManager.errorInScene("Pause");
+			}
+		}
+	}
+
+
+	/// <summary>
+	/// Starts the stopwatch. Time of each event is calculated according to this moment.
+	/// Sets "initialTimeStamp" to the time at which the stopwatch started.
+	/// </summary>
+	public static void setTimeStamp()
+	{
+		initialTimeStamp=@System.DateTime.Now.ToString("HH-mm-ss-fff");
+		stopWatch.Start ();
+		Debug.Log (initialTimeStamp);
+	}
+
+	/// <summary>
+	/// Calculates time elapsed
+	/// </summary>
+	/// <returns>The time elapsed in milliseconds since the "setTimeStamp()".</returns>
+	public static string timeStamp()
+	{
+		long milliSec = stopWatch.ElapsedMilliseconds;
+		string stamp = milliSec.ToString();
+		return stamp;
+	}
+
+		
 
 
 }
