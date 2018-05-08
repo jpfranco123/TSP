@@ -10,6 +10,9 @@ using Random = UnityEngine.Random;
 // This Script (a component of Game Manager) Initializes the Borad (i.e. screen).
 public class BoardManager : MonoBehaviour {
 
+
+
+
 	//Resoultion width and Height
 	//CAUTION! Modifying this does not modify the Screen resolution. This is related to the unit grid on Unity.
 	public static int resolutionWidth = 1024;
@@ -170,7 +173,7 @@ public class BoardManager : MonoBehaviour {
 		Items = new Item[objectCount];
 		for(int i=0; i < objectCount;i=i+1)
 		{
-			int objectPositioned = 0;
+			//int objectPositioned = 0;
 			Item ItemToLocate = generateItem (i, unitycoord[i]);//66: Change to different Layer?
 			Items[i] = ItemToLocate;
 		}
@@ -238,25 +241,7 @@ public class BoardManager : MonoBehaviour {
 			GameManager.Distancetravelled = 0;
 			distanceTravelledValue = 0;
 			setTSPInstance ();
-			//If the bool returned by LayoutObjectAtRandom() is false, then retry again:
-			//Destroy all Items. Initialize list again and try to place them once more.
 
-			//			bool ItemsPlaced = false;
-			//				GameObject[] Items1 = GameObject.FindGameObjectsWithTag("Item");
-			//				foreach (GameObject Item in Items1)
-			//				{
-			//					Destroy(Item);
-			//				}
-
-//			InitialiseList ();
-			//			ItemClicks.Clear ();
-//			seeGrid();
-			//		ItemsPlaced = 
-//			LayoutObjectAtRandom ();
-			//		if (ItemsPlaced == false) 
-			//		{
-			//			GameManager.errorInScene ("Not enough space to place all Items");
-			//		}
 			keysON = true;
 		} else if(sceneToSetup == "TrialAnswer")
 		{
@@ -265,8 +250,7 @@ public class BoardManager : MonoBehaviour {
 			RandomizeButtons ();
 			keysON = true;
 
-			//			InitialiseList ();
-			//			seeGrid();
+			//seeGrid();
 		}
 
 	}
@@ -352,6 +336,7 @@ public class BoardManager : MonoBehaviour {
 		Text texto = butt.GetComponentInChildren<Text> ();
 		texto.color = Color.gray;
 	}
+		
 
 
 //	public void setupInitialScreen()
@@ -361,28 +346,65 @@ public class BoardManager : MonoBehaviour {
 //		GameObject start = GameObject.Find("Start") as GameObject;
 //		start.SetActive (false);
 //
-//		//start.btnLeft.GetComponentInChildren<Text>().text = "No";
+//		Debug.Log("Rand button");
+//		GameObject rand = GameObject.Find("RandomisationID") as GameObject;
+//		rand.SetActive (false);
 //
+//		//Participant Input
 //		InputField pID = GameObject.Find ("ParticipantID").GetComponent<InputField>();
 //
 //		InputField.SubmitEvent se = new InputField.SubmitEvent();
 //		//se.AddListener(submitPID(start));
-//		se.AddListener((value)=>submitPID(value,start));
+//		se.AddListener((value)=>submitPID(value,start,rand));
 //		pID.onEndEdit = se;
+//
+//
+//		//Randomisation Input
+//		InputField rID = rand.GetComponent<InputField>();
+//
+//		InputField.SubmitEvent se2 = new InputField.SubmitEvent();
+//		//se.AddListener(submitPID(start));
+//		se2.AddListener((value)=>submitRandID(value,start));
+//		rID.onEndEdit = se2;
+//
+//		//pID.onSubmit.AddListener((value) => submitPID(value));
 //
 //	}
 //
-//	private void submitPID(string pIDs, GameObject start)
+//	private void submitPID(string pIDs, GameObject start, GameObject rand)
 //	{
 //		//Debug.Log (pIDs);
 //
 //		GameObject pID = GameObject.Find ("ParticipantID");
-//		GameObject pIDT = GameObject.Find ("Participant ID Text");
 //		pID.SetActive (false);
-//		pIDT.SetActive (false);
+//		//pIDT.SetActive (false);
 //
 //		//Set Participant ID
 //		GameManager.participantID=pIDs;
+//
+//		//Activate Randomisation Listener
+//		rand.SetActive (true);
+//
+//
+//
+//		//Activate Start Button and listener
+//		//GameObject start = GameObject.Find("Start");
+//		//start.SetActive (true);
+//		//keysON = true;
+//
+//	}
+//
+//	private void submitRandID(string rIDs, GameObject start)
+//	{
+//		//Debug.Log (pIDs);
+//
+//		GameObject rID = GameObject.Find ("RandomisationID");
+//		GameObject pIDT = GameObject.Find ("Participant ID Text");
+//		rID.SetActive (false);
+//		pIDT.SetActive (false);
+//
+//		//Set Participant ID
+//		GameManager.randomisationID=rIDs;
 //
 //		//Activate Start Button and listener
 //		//GameObject start = GameObject.Find("Start");
@@ -390,81 +412,6 @@ public class BoardManager : MonoBehaviour {
 //		keysON = true;
 //
 //	}
-
-
-	public void setupInitialScreen()
-	{
-		//Button 
-		Debug.Log("Start button");
-		GameObject start = GameObject.Find("Start") as GameObject;
-		start.SetActive (false);
-
-		Debug.Log("Rand button");
-		GameObject rand = GameObject.Find("RandomisationID") as GameObject;
-		rand.SetActive (false);
-
-		//Participant Input
-		InputField pID = GameObject.Find ("ParticipantID").GetComponent<InputField>();
-
-		InputField.SubmitEvent se = new InputField.SubmitEvent();
-		//se.AddListener(submitPID(start));
-		se.AddListener((value)=>submitPID(value,start,rand));
-		pID.onEndEdit = se;
-
-
-		//Randomisation Input
-		InputField rID = rand.GetComponent<InputField>();
-
-		InputField.SubmitEvent se2 = new InputField.SubmitEvent();
-		//se.AddListener(submitPID(start));
-		se2.AddListener((value)=>submitRandID(value,start));
-		rID.onEndEdit = se2;
-
-		//pID.onSubmit.AddListener((value) => submitPID(value));
-
-	}
-
-	private void submitPID(string pIDs, GameObject start, GameObject rand)
-	{
-		//Debug.Log (pIDs);
-
-		GameObject pID = GameObject.Find ("ParticipantID");
-		pID.SetActive (false);
-		//pIDT.SetActive (false);
-
-		//Set Participant ID
-		GameManager.participantID=pIDs;
-
-		//Activate Randomisation Listener
-		rand.SetActive (true);
-
-
-
-		//Activate Start Button and listener
-		//GameObject start = GameObject.Find("Start");
-		//start.SetActive (true);
-		//keysON = true;
-
-	}
-
-	private void submitRandID(string rIDs, GameObject start)
-	{
-		//Debug.Log (pIDs);
-
-		GameObject rID = GameObject.Find ("RandomisationID");
-		GameObject pIDT = GameObject.Find ("Participant ID Text");
-		rID.SetActive (false);
-		pIDT.SetActive (false);
-
-		//Set Participant ID
-		GameManager.randomisationID=rIDs;
-
-		//Activate Start Button and listener
-		//GameObject start = GameObject.Find("Start");
-		start.SetActive (true);
-		keysON = true;
-
-	}
 		
 
 	// Use this for initialization
@@ -482,8 +429,6 @@ public class BoardManager : MonoBehaviour {
 		}
 
 	}
-
-
 
 
 
@@ -598,7 +543,7 @@ public class BoardManager : MonoBehaviour {
 		Light myLight = ItemToLocate.gameItem.GetComponent<Light> ();
 		myLight.enabled = !myLight.enabled;
 
-		int cityIn=(myLight.enabled)? 1 : 0 ;
+		//int cityIn=(myLight.enabled)? 1 : 0 ;
 
 	}
 
@@ -620,26 +565,13 @@ public class BoardManager : MonoBehaviour {
 		int cityofdestination = ItemToLocate.CityNumber;
 		int cityofdeparture = previouscities[previouscities.Count()-1];
 
-//		Vector3 coordestination = new Vector3 ((float)cox [cityofdestination], (float)coy [cityofdestination], 0.0f);
-//		Vector3 coordeparture = new Vector3 ((float)cox [cityofdeparture], (float)coy [cityofdeparture], 0.0f);
-
 		Vector2 coordestination = unitycoord [cityofdestination];
 		Vector2 coordeparture = unitycoord [cityofdeparture];
 
-
-//		Vector3[] coordinates = new Vector3[coordestination, coordeparture];
 		Vector3[] coordinates = new Vector3[2];
 		coordinates [0] = coordestination;
 		coordinates [1] = coordeparture;
 			
-
-		//LineRenderer lineRenderer = GetComponent<LineRenderer>();
-/*		lines[citiesvisited] = new GameObject();
-		newLine[citiesvisited] = lines[citiesvisited].AddComponent<LineRenderer> ();
-		newLine[citiesvisited] = lines[citiesvisited].AddComponent<Button> ();
-		newLine[citiesvisited].SetPositions(coordinates);
-		newLine[citiesvisited].SetWidth(0.1f,0.1f);
-//		newLine[citiesvisited].SetColors(Color.yellow, Color.yellow);*/
 		GameObject instance = Instantiate (LineItemPrefab, new Vector2(0,0), Quaternion.identity) as GameObject;
 
 		canvas=GameObject.Find("Canvas");
@@ -650,12 +582,6 @@ public class BoardManager : MonoBehaviour {
 		newLine[citiesvisited].SetPositions(coordinates);
 //		Debug.Log("LineCreated");
 //		Debug.Log (citiesvisited);
-
-//		newLine[citiesvisited].SetWidth(0.1f,0.1f);
-		//		newLine[citiesvisited].SetColors(Color.yellow, Color.yellow);
-
-//		lines[citiesvisited].GetComponent<Button>().onClick.AddListener(delegate{EraseLine(instance);});//cities visited will count the number of lines
-//		Debug.Log (lines[citiesvisited]);
 		}
 
 	//if double click on the previous city then cancel change the destination city back to vacant, and delete the connecting line b/w the two cities

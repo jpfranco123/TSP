@@ -17,6 +17,9 @@ public class GameManager : MonoBehaviour
 	//The reference to the script managing the board (interface/canvas).
 	private BoardManager boardScript;
 
+	//The reference to the script managing the scene flow.
+	private SceneManagerFunctions smf;
+
 	//Current Scene
 	public static string escena;
 
@@ -123,17 +126,17 @@ public class GameManager : MonoBehaviour
 	{
 
 		//Makes the Game manager a Singleton
-		if (instance == null) 
-		{
+		if (instance == null) {
 			instance = this;
-		}
-		else if (instance != this)
+		} else if (instance != this) {
 			Destroy (gameObject);
+		}
 
 		DontDestroyOnLoad (gameObject);
 
 		//Initializes the game
 		boardScript = instance.GetComponent<BoardManager> ();
+		smf = instance.GetComponent<SceneManagerFunctions> ();
 
 		InitGame();
 		if (escena != "SetUp") 
@@ -170,11 +173,7 @@ public class GameManager : MonoBehaviour
 			//loadTSPInstance ();
 
 			randomizeButtons ();
-			boardScript.setupInitialScreen ();
-			//SceneManager.LoadScene (1);
-
-			//If it's the second scene, move incrementally through trials one at a time, set up the question with items only scene from the boardmanager, show the timer and 
-			//run it for the time the items should be there by themselves, do not show the question
+			smf.setupInitialScreen ();
 		} 
 		else if (escena == "Trial") 
 		{
@@ -185,8 +184,6 @@ public class GameManager : MonoBehaviour
 
 			tiempo = timeQuestion;
 			totalTime = tiempo;
-
-			//If it's the third scene, set up the question with the 'answer' scene from the boardmanager, show/run the timer for the answer
 		} 
 		else if (escena == "TrialAnswer") 
 		{
@@ -194,8 +191,6 @@ public class GameManager : MonoBehaviour
 			boardScript.SetupScene ("TrialAnswer");
 			tiempo = timeAnswer;
 			totalTime = tiempo;
-
-			//If it's the fourth scene, don't show the timer and run it for the time between trials
 		} 
 		else if (escena == "InterTrialRest") 
 		{
@@ -203,7 +198,6 @@ public class GameManager : MonoBehaviour
 			tiempo = timeRest1;
 			totalTime = tiempo;
 
-			//If it's the fifth scene, show the timer and run it for the time between blocks, then proceed to the next block
 		} 
 		else if (escena == "InterBlockRest") 
 		{
@@ -215,7 +209,6 @@ public class GameManager : MonoBehaviour
 			//Debug.Log ("TiempoRest=" + tiempo);
 
 			randomizeButtons ();
-			//SceneManager.LoadScene (1);
 		}
 
 	}
@@ -228,7 +221,21 @@ public class GameManager : MonoBehaviour
 		if (escena != "SetUp") 
 		{
 			startTimer ();
-			//			pauseManager ();
+			pauseManager ();
+		}
+	}
+
+	//To pause press alt+p
+	//Pauses/Unpauses the game. Unpausing take syou directly to next trial
+	//Warning! When Unpausing the following happens:
+	//If paused/unpaused in scene 1 or 2 (while items are shown or during answer time) then saves the trialInfo with an error: "pause" without information on the items selected.
+	//If paused/unpaused on ITI or IBI then it generates a new row in trial Info with an error ("pause"). i.e. there are now 2 rows for the trial.
+	private void pauseManager(){
+		if (( Input.GetKey (KeyCode.LeftAlt) || Input.GetKey (KeyCode.RightAlt)) && Input.GetKeyDown (KeyCode.P) ){
+			Time.timeScale = (Time.timeScale == 1) ? 0 : 1;
+			if(Time.timeScale==1){
+				errorInScene("Pause");
+			}
 		}
 	}
 
