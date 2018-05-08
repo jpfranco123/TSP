@@ -130,23 +130,7 @@ public class BoardManager : MonoBehaviour {
 			}
 		}
 	}
-
-
-
-/*	//Call only for visualizing grid in the Canvas.
-	void seeGrid()
-	{
-		GameObject hangerpref = (GameObject)Resources.Load ("Hanger");
-		for (int ss=0;ss<gridPositions.Count;ss++)
-		{
-			GameObject hanger = Instantiate (hangerpref, gridPositions[ss], Quaternion.identity) as GameObject;
-			canvas=GameObject.Find("Canvas");
-			hanger.transform.SetParent (canvas.GetComponent<Transform> (),false);
-			hanger.transform.position = gridPositions[ss];
-		}
-	}
-
-*/
+		
 	public List<Vector2> unitycoord = new List<Vector2> ();
 
 	//Initializes the instance for this trial:
@@ -243,38 +227,6 @@ public class BoardManager : MonoBehaviour {
 	}
 
 
-	// Places all the objects from the instance (v,ls) on the canvas. 
-	// Returns TRUE if all Items where positioned, FALSE otherwise.
-/*	private bool LayoutObjectAtRandom()
-	{
-		int objectCount =coy.Length;
-		//note: not sure what "Items" is being used for, so check that's it's ok before using it elsewhere
-		Items = new Item[objectCount];
-		for(int i=0; i < objectCount;i=i+3)
-		{
-			int objectPositioned = 0;
-			Item ItemToLocate = generateItem (i, new Vector3 (-1000,-1000,-1000));//66: Change to different Layer?
-			while (objectPositioned == 0) 
-			{
-				if (gridPositions.Count > 0) 
-				{
-					Vector3 randomPosition = RandomPosition ();
-					placeItem (ItemToLocate, randomPosition);
-					ItemToLocate.center = new Vector2(randomPosition.x,randomPosition.y);
-					Items [i] = ItemToLocate;
-					objectPositioned = 1;
-				}
-				else
-				{
-					//Debug.Log ("Not enough space to place all Items");
-					return false;
-				}
-			}
-
-		}
-		return true;
-	}
-*/
 	/// Macro function that initializes the Board
 	public void SetupScene(string sceneToSetup)
 	{
@@ -402,6 +354,44 @@ public class BoardManager : MonoBehaviour {
 	}
 
 
+//	public void setupInitialScreen()
+//	{
+//		//Button 
+//		Debug.Log("Start button");
+//		GameObject start = GameObject.Find("Start") as GameObject;
+//		start.SetActive (false);
+//
+//		//start.btnLeft.GetComponentInChildren<Text>().text = "No";
+//
+//		InputField pID = GameObject.Find ("ParticipantID").GetComponent<InputField>();
+//
+//		InputField.SubmitEvent se = new InputField.SubmitEvent();
+//		//se.AddListener(submitPID(start));
+//		se.AddListener((value)=>submitPID(value,start));
+//		pID.onEndEdit = se;
+//
+//	}
+//
+//	private void submitPID(string pIDs, GameObject start)
+//	{
+//		//Debug.Log (pIDs);
+//
+//		GameObject pID = GameObject.Find ("ParticipantID");
+//		GameObject pIDT = GameObject.Find ("Participant ID Text");
+//		pID.SetActive (false);
+//		pIDT.SetActive (false);
+//
+//		//Set Participant ID
+//		GameManager.participantID=pIDs;
+//
+//		//Activate Start Button and listener
+//		//GameObject start = GameObject.Find("Start");
+//		start.SetActive (true);
+//		keysON = true;
+//
+//	}
+
+
 	public void setupInitialScreen()
 	{
 		//Button 
@@ -409,31 +399,65 @@ public class BoardManager : MonoBehaviour {
 		GameObject start = GameObject.Find("Start") as GameObject;
 		start.SetActive (false);
 
-		//start.btnLeft.GetComponentInChildren<Text>().text = "No";
+		Debug.Log("Rand button");
+		GameObject rand = GameObject.Find("RandomisationID") as GameObject;
+		rand.SetActive (false);
 
+		//Participant Input
 		InputField pID = GameObject.Find ("ParticipantID").GetComponent<InputField>();
 
 		InputField.SubmitEvent se = new InputField.SubmitEvent();
 		//se.AddListener(submitPID(start));
-		se.AddListener((value)=>submitPID(value,start));
+		se.AddListener((value)=>submitPID(value,start,rand));
 		pID.onEndEdit = se;
 
+
+		//Randomisation Input
+		InputField rID = rand.GetComponent<InputField>();
+
+		InputField.SubmitEvent se2 = new InputField.SubmitEvent();
+		//se.AddListener(submitPID(start));
+		se2.AddListener((value)=>submitRandID(value,start));
+		rID.onEndEdit = se2;
 
 		//pID.onSubmit.AddListener((value) => submitPID(value));
 
 	}
 
-	private void submitPID(string pIDs, GameObject start)
+	private void submitPID(string pIDs, GameObject start, GameObject rand)
 	{
 		//Debug.Log (pIDs);
 
 		GameObject pID = GameObject.Find ("ParticipantID");
-		GameObject pIDT = GameObject.Find ("Participant ID Text");
 		pID.SetActive (false);
-		pIDT.SetActive (false);
+		//pIDT.SetActive (false);
 
 		//Set Participant ID
 		GameManager.participantID=pIDs;
+
+		//Activate Randomisation Listener
+		rand.SetActive (true);
+
+
+
+		//Activate Start Button and listener
+		//GameObject start = GameObject.Find("Start");
+		//start.SetActive (true);
+		//keysON = true;
+
+	}
+
+	private void submitRandID(string rIDs, GameObject start)
+	{
+		//Debug.Log (pIDs);
+
+		GameObject rID = GameObject.Find ("RandomisationID");
+		GameObject pIDT = GameObject.Find ("Participant ID Text");
+		rID.SetActive (false);
+		pIDT.SetActive (false);
+
+		//Set Participant ID
+		GameManager.randomisationID=rIDs;
 
 		//Activate Start Button and listener
 		//GameObject start = GameObject.Find("Start");
@@ -441,20 +465,7 @@ public class BoardManager : MonoBehaviour {
 		keysON = true;
 
 	}
-
-/*	public static string getItemCoordinates()
-	{
-		string coordinates = "";
-		foreach (Item it in Items)
-		{
-			//Debug.Log ("Item");
-			//Debug.Log (it.center);
-			//Debug.Log (it.coordWeight1);
-			coordinates = coordinates + "(" + it.center.x + "," + it.center.y + ")";
-		}
-		return coordinates;
-	}
-*/
+		
 
 	// Use this for initialization
 	void Start () 
@@ -501,63 +512,6 @@ public class BoardManager : MonoBehaviour {
 	}
 
 
-	//	//Checks if positioning an Item in the new position generates an overlap. Assuming the new Item has a radius of KSItemRadius.
-	//	//Returns: TRUE if there is an overlap. FALSE Otherwise.
-	//	bool objectOverlapsQ(Vector3 pos)
-	//	{
-	//		//If physics could be started before update we could use the following easier function:
-	//		//bool overlap = Physics2D.IsTouchingLayers(newObject.GetComponent<Collider2D>());
-	//
-	//		bool overlap = Physics2D.OverlapCircle(pos,KSItemRadius);
-	//		return overlap;
-	//
-	//	}
-
-	//Checks if positioning an Item in the new position generates an overlap.
-	//Returns: TRUE if there is an overlap. FALSE Otherwise.
-	//	bool objectOverlapsQ(Vector3 pos, Item Item)
-	//	{
-	//		Vector2 posxy = new Vector3 (pos.x, pos.y);
-	//		bool overlapValue = Physics2D.OverlapArea (Item.coordValue1+posxy, Item.coordValue2+posxy);
-	//		bool overlapWeight = Physics2D.OverlapArea (Item.coordWeight1+posxy, Item.coordWeight2+posxy);
-
-	//Debug.Log ("Item");
-	//Debug.Log(Item.coordValue1 + posxy);
-	//Debug.Log(Item.coordValue2+posxy);
-	//		return overlapValue || overlapWeight;
-	//return false;
-	//	}
-
-
-	//necessary: this is what we had from the optimization
-	//	private void setKeyInput(){
-	//		if (GameManager.escena == "Trial") {
-	//			if (Input.GetKeyDown (KeyCode.D)) {
-	//				GameManager.changeToNextScene (answer, 1);
-	//			} 
-	//		} else if (GameManager.escena == "SetUp") {
-	//			if (Input.GetKeyDown (KeyCode.D)) {
-	//				GameManager.setTimeStamp ();
-	//
-	//			GameManager.changeToNextScene (0,0);
-	//		}
-	//	}
-	//}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	//previouscities and addcity based on http://answers.unity3d.com/questions/906057/adding-gameobjects-to-a-list.html
 	public List<int> previouscities = new List<int> ();
@@ -571,8 +525,6 @@ public class BoardManager : MonoBehaviour {
 			previouscities.Add (ItemToLocate.CityNumber);
 			citiesvisited = previouscities.Count ();
 		}
-//		Debug.Log("citiesUpdated");
-//		Debug.Log (citiesvisited);
 	}
 
 	public int citiesvisited = 0;  //does the .Count function need parentheses afterwrds? ()
@@ -743,92 +695,3 @@ public class BoardManager : MonoBehaviour {
 		itemClicks.Add (new Vector3 (100, GameManager.timeTrial - GameManager.tiempo,3));
 		}
 }
-/*	
-	//fill and unfill the city on each click by changing the sprite, based on http://answers.unity3d.com/questions/1172061/how-to-change-image-of-button-when-clicked.html
-	//and commented out to try http://answers.unity3d.com/questions/1199280/how-do-you-change-pressed-sprite-c.html 
-	public Sprite CityVacant = (GameObject)Resources.Load ("CityVacant");
-	public Sprite CityVisited = (GameObject)Resources.Load ("CityVisited");
-	void Un_FillCity(Item ItemToLocate){
-		if (ItemToLocate.CityButton.image.sprite == CityVacant)
-			ItemToLocate.CityButton.image.sprite = CityVisited;
-		else {
-			ItemToLocate.CityButton.image.sprite = CityVacant;
-		}
-	}
-*/
-
-//	void FillCity(int CityNumber)
-//	{
-	
-//	}
-
-//	void UnfillCity()
-//	{
-
-//	}
-
-
-
-
-
-
-
-
-
-	/*	//code taken from http://answers.unity3d.com/questions/315524/how-to-draw-a-line-between-two-points-in-unity.html
-		private int ClickCount = 0;
-		private Vector2[] clicks = new Vector2[100];
-
-		private Object[] pointArr = new Object[101];
-		private GameObject city;
-
-		void Start()
-		{
-			for (int i=0; i<lines.Length; i++) {
-			}
-			for (int i=0; i<lines.Length; i++) {
-				newLine[i].SetWidth (0.1f, 0.1f);
-			}
-			city = GameObject.Find ("TSPItem");
-		}
-
-
-
-		public void Update()
-		{
-				if (Input.GetMouseButtonDown(0)){
-					while(ClickCount<lines.Length) {
-						if(ClickCount == 0){
-							clicks[ClickCount] = new Vector2(Input.mousePosition.x , Input.mousePosition.y );
-							clicks[ClickCount] = Camera.main.ScreenToWorldPoint(clicks[ClickCount]);
-							pointArr[ClickCount]= Instantiate(city,clicks[ClickCount],Quaternion.identity);
-							ClickCount++;
-							break;    
-						}else{
-							clicks[ClickCount] = new Vector2(Input.mousePosition.x , Input.mousePosition.y );
-							clicks[ClickCount] = Camera.main.ScreenToWorldPoint(clicks[ClickCount]);
-							newLine[ClickCount].SetPosition(0, clicks[ClickCount-1]);
-							newLine[ClickCount].SetPosition(1, clicks[ClickCount]);
-							pointArr[ClickCount] = Instantiate(city,clicks[ClickCount],Quaternion.identity);
-							ClickCount++;
-							break;
-						}
-					}
-				}
-			}
-
-
-             if (firstTouch)
-             {
-                 firstClick = new Vector2(Input.mousePosition.x , Input.mousePosition.y );
-                 firstClick = Camera.main.ScreenToWorldPoint(firstClick);
-                 firstTouch = false;
-             }
-             else
-             {
-                 Vector2 secondClick = new Vector2(Input.mousePosition.x , Input.mousePosition.y );
-                 secondClick = Camera.main.ScreenToWorldPoint(secondClick);
-                 newLine.SetPosition(0, firstClick);
-                 newLine.SetPosition(1, secondClick);
-                 firstTouch = true;
-             }*/

@@ -70,6 +70,9 @@ public class GameManager : MonoBehaviour
 	//This is the string that will be used as the file name where the data is stored. DeCurrently the date-time is used.
 	public static string participantID = "Empty";
 
+	//This is the randomisation number (#_param2.txt that is to be used for oder of instances for this participant)
+	public static string randomisationID = "Empty";
+
 	public static string dateID = @System.DateTime.Now.ToString("dd MMMM, yyyy, HH-mm");
 
 	private static string identifierName;
@@ -78,6 +81,7 @@ public class GameManager : MonoBehaviour
 	private static string inputFolder = "/DATAinf/Input/";
 	private static string inputFolderTSPInstances = "/DATAinf/Input/TSPInstances/";
 	private static string outputFolder = "/DATAinf/Output/";
+
 
 	//Can copy this code if time stamps are needed (likely) Stopwatch to calculate time of events.
 	private static System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
@@ -162,10 +166,9 @@ public class GameManager : MonoBehaviour
 		if (escena == "SetUp") 
 		{
 			block++; 
-			loadParameters ();
-			loadTSPInstance ();
+			//loadParameters ();
+			//loadTSPInstance ();
 
-			//RandomizeTSPInstances ();
 			randomizeButtons ();
 			boardScript.setupInitialScreen ();
 			//SceneManager.LoadScene (1);
@@ -514,10 +517,12 @@ public class GameManager : MonoBehaviour
 	}
 
 	//Loads the parameters from the text files: param.txt and layoutParam.txt
-	void loadParameters()
+	private static void loadParameters()
 	{
 		//string folderPathLoad = Application.dataPath.Replace("Assets","") + "DATA/Input/";
 		string folderPathLoad = Application.dataPath + inputFolder;
+		string folderPathLoadInstances = Application.dataPath + inputFolderTSPInstances;
+
 		var dict = new Dictionary<string, string>();
 
 		try 
@@ -552,7 +557,7 @@ public class GameManager : MonoBehaviour
 				}
 			}
 
-			using (StreamReader sr2 = new StreamReader (folderPathLoad + "param2.txt"))
+			using (StreamReader sr2 = new StreamReader (folderPathLoadInstances + randomisationID + "_param2.txt"))
 			{
 
 				// (This loop reads every line until EOF or the first blank line.)
@@ -579,7 +584,7 @@ public class GameManager : MonoBehaviour
 	}
 
 	//Assigns the parameters in the dictionary to variables
-	void assignVariables(Dictionary<string,string> dictionary)
+	private static void assignVariables(Dictionary<string,string> dictionary)
 	{
 		//Assigns Parameters - these are all going to be imported from input files
 		string timeRest1S;
@@ -613,66 +618,46 @@ public class GameManager : MonoBehaviour
 		numberOfInstances=Int32.Parse(numberOfInstancesS);
 
 		dictionary.TryGetValue ("instanceRandomization", out instanceRandomizationS);
-		//If instanceRandomization is not included in the parameters file. It generates a randomization.
-		//		if (!dictionary.ContainsKey("instanceRandomization")){
-		//			RandomizeKSInstances();
-		//		} else{
+
 		int[] instanceRandomizationNo0 = Array.ConvertAll(instanceRandomizationS.Substring (1, instanceRandomizationS.Length - 2).Split (','), int.Parse);
 		instanceRandomization = new int[instanceRandomizationNo0.Length];
-		//foreach (int i in instanceRandomizationNo0)
+
 		for (int i = 0; i < instanceRandomizationNo0.Length; i++)
 		{
 			instanceRandomization[i] = instanceRandomizationNo0 [i] - 1;
 		}
-		//		}
 
 
-		//Necessary?
 		////Assigns LayoutParameters
-		//string resolutionWidthS;
-		//string resolutionHeightS;
+
 		string columnsS;
 		string rowsS;
-		//string KSItemRadiusS;
-		//string totalAreaBillS;
-		//string totalAreaWeightS;
 
-		//dictionary.TryGetValue ("resolutionWidth", out resolutionWidthS);
-		//dictionary.TryGetValue ("resolutionHeight", out resolutionHeightS);
 		dictionary.TryGetValue ("columns", out columnsS);
 		dictionary.TryGetValue ("rows", out rowsS);
-		//	dictionary.TryGetValue ("totalAreaBill", out totalAreaBillS);
-		//	dictionary.TryGetValue ("totalAreaWeight", out totalAreaWeightS);
 
-		//dictionary.TryGetValue ("KSItemRadius", out KSItemRadiusS);
-
-
-		//BoardManager.resolutionWidth=Int32.Parse(resolutionWidthS);
-		//BoardManager.resolutionHeight=Int32.Parse(resolutionHeightS);
 		BoardManager.columns=Int32.Parse(columnsS);
 		BoardManager.rows=Int32.Parse(rowsS);
-		//	BoardManager.totalAreaBill=Int32.Parse(totalAreaBillS);
-		//	BoardManager.totalAreaWeight=Int32.Parse(totalAreaWeightS);
-		//BoardManager.KSItemRadius=Convert.ToSingle(KSItemRadiusS);//Int32.Parse(KSItemRadiusS);
+
 	}
 
 
 
 
 
-	//66: Wrong function: items are repeated.
-	//Randomizes the sequence of Instances to be shown to the participant adn stores it in: instanceRandomization
-	void RandomizeTSPInstances()
-	{
-		//		instanceRandomization = new int[numberOfTrials/**numberOfBlocks*/];
-		//		for (int i = 0; i < numberOfTrials/**numberOfBlocks*/; i++) 
-		instanceRandomization = new int[numberOfTrials*numberOfBlocks];
-		for (int i = 0; i < numberOfTrials*numberOfBlocks; i++) 
-		{
-			instanceRandomization[i] = Random.Range(0,numberOfInstances);
-		}
-	}
-
+//	//66: Wrong function: items are repeated.
+//	//Randomizes the sequence of Instances to be shown to the participant adn stores it in: instanceRandomization
+//	void RandomizeTSPInstances()
+//	{
+//		//		instanceRandomization = new int[numberOfTrials/**numberOfBlocks*/];
+//		//		for (int i = 0; i < numberOfTrials/**numberOfBlocks*/; i++) 
+//		instanceRandomization = new int[numberOfTrials*numberOfBlocks];
+//		for (int i = 0; i < numberOfTrials*numberOfBlocks; i++) 
+//		{
+//			instanceRandomization[i] = Random.Range(0,numberOfInstances);
+//		}
+//	}
+//
 
 	//Takes care of changing the Scene to the next one (Except for when in the setup scene)
 	public static void changeToNextScene(List <Vector3> itemClicks, int answer, int randomYes)
@@ -680,6 +665,8 @@ public class GameManager : MonoBehaviour
 		BoardManager.keysON = false;
 		if (escena == "SetUp") {
 			Debug.Log ("SetUp");
+			loadParameters ();
+			loadTSPInstance ();
 			saveHeaders ();
 			SceneManager.LoadScene ("Trial");
 		} else if (escena == "Trial") {
