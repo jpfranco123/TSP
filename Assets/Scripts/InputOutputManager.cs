@@ -6,7 +6,7 @@ using System;
 using System.IO;
 using System.Linq; 
 using Random = UnityEngine.Random;
-using UnityEditor;
+//using UnityEditor;
 
 public class InputOutputManager : MonoBehaviour {
 
@@ -143,7 +143,7 @@ public class InputOutputManager : MonoBehaviour {
 		} catch (Exception e) {
 			Debug.Log ("The randomisation file could not be read. Perhaps it doesn't exist.");
 			Debug.Log (e.Message);
-			EditorUtility.DisplayDialog ("The randomisation file could not be read.", e.Message,"Got it! I'll restart the game.");
+			//EditorUtility.DisplayDialog ("The randomisation file could not be read.", e.Message,"Got it! I'll restart the game.");
 
 		}
 
