@@ -6,6 +6,7 @@ using System;
 using System.IO;
 using System.Linq; 
 using Random = UnityEngine.Random;
+using UnityEditor;
 
 public class InputOutputManager : MonoBehaviour {
 
@@ -115,6 +116,16 @@ public class InputOutputManager : MonoBehaviour {
 				}
 			}
 
+
+
+		} 
+		catch (Exception e) 
+		{
+			Debug.Log ("The file could not be read:");
+			Debug.Log (e.Message);
+		}
+
+		try {
 			using (StreamReader sr2 = new StreamReader (folderPathLoadInstances + randomisationID + "_param2.txt"))
 			{
 
@@ -129,13 +140,14 @@ public class InputOutputManager : MonoBehaviour {
 					dict.Add(tmp[0], tmp[1]);//int.Parse(dict[tmp[1]]);
 				}
 			}
-
-		} 
-		catch (Exception e) 
-		{
-			Debug.Log ("The file could not be read:");
+		} catch (Exception e) {
+			Debug.Log ("The randomisation file could not be read. Perhaps it doesn't exist.");
 			Debug.Log (e.Message);
+			EditorUtility.DisplayDialog ("The randomisation file could not be read.", e.Message,"Got it! I'll restart the game.");
+
 		}
+
+
 		return dict;
 	}
 

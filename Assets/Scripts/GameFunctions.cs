@@ -50,11 +50,14 @@ public class GameFunctions : MonoBehaviour {
 		//Debug.Log (pIDs);
 
 		GameObject pID = GameObject.Find ("ParticipantID");
+		GameObject pIDT = GameObject.Find ("Participant ID Text");
 		pID.SetActive (false);
 		//pIDT.SetActive (false);
 
 		//Set Participant ID
 		InputOutputManager.participantID=pIDs;
+		Text inputID = pIDT.GetComponent<Text>();
+		inputID.text = "Randomisation Number";
 
 		//Activate Randomisation Listener
 		rand.SetActive (true);
