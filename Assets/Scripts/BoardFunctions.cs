@@ -8,19 +8,6 @@ using Random = UnityEngine.Random;
 
 public class BoardFunctions : MonoBehaviour {
 
-	//private BoardManager boardScript = GameManager.boardScript;
-
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
-
 	//Function which takes coordinates from input files and converts it to coordinates on the unity grid
 	//unity origin x=-476, y=-344, which means opposite corner is x=476 and y=344
 	//minimum input coordinate is (0,0), maximum input coordinate is (952,688)
@@ -119,7 +106,7 @@ public class BoardFunctions : MonoBehaviour {
 	}
 
 	//66
-	//Returns a ra>ndom position from the grid and removes the Item from the list.
+	//Returns a random position from the grid and removes the Item from the list.
 	//	public static Tuple<int, Vector3> RandomPosition(List <Vector3> gridPositions)
 	//	{
 	//		int randomIndex=Random.Range(0,gridPositions.Count);

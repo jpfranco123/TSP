@@ -31,17 +31,6 @@ public class InputOutputManager : MonoBehaviour {
 	private static string folderPathLoadInstances;
 	private static string folderPathSave;
 
-
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
 	public static void loadGame(){
 
 		identifierName = participantID + "_" + dateID + "_" + "TSP" + "_";
@@ -396,7 +385,7 @@ public class InputOutputManager : MonoBehaviour {
 		BoardManager.keysON = false;
 		int answer = 3;
 		int randomYes = -1;
-		InputOutputManager.save ("", answer, GameManager.timeTrial, randomYes, errorDetails);
+		InputOutputManager.save ("", answer, GameManager.totalTime, randomYes, errorDetails);
 		GameManager.changeToNextTrial ();
 	}
 		

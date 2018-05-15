@@ -13,16 +13,6 @@ public class GameFunctions : MonoBehaviour {
 	// Time at which the stopwatch started. Time of each event is calculated according to this moment.
 	public static string initialTimeStamp;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
 	public static void setupInitialScreen()
 	{
 		//Button 

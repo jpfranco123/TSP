@@ -32,7 +32,7 @@ public class BoardManager : MonoBehaviour {
 	public static GameObject LineItemPrefab;
 
 	//The possible positions of the Items;
-	private List <Vector3> gridPositions = new List<Vector3> ();
+	//private List <Vector3> gridPositions = new List<Vector3> ();
 
 	//Counter
 	public Text DistanceText;
@@ -209,7 +209,7 @@ public class BoardManager : MonoBehaviour {
 		if (GameManager.escena == "Trial") {
 			if (Input.GetKeyDown (KeyCode.UpArrow)) {
 				InputOutputManager.saveTimeStamp ("ParticipantSkip");
-				GameManager.changeToNextScene (itemClicks,0,0);
+				GameManager.changeToNextScene (itemClicks,0,0,1);
 			}
 		} else if (GameManager.escena == "TrialAnswer") 
 		{
@@ -222,7 +222,7 @@ public class BoardManager : MonoBehaviour {
 					GameObject boto = GameObject.Find("LEFTbutton") as GameObject;
 					BoardFunctions.highlightButton(boto);
 					GameFunctions.setTimeStamp ();
-					GameManager.changeToNextScene (itemClicks,0,1);
+					GameManager.changeToNextScene (itemClicks,0,1,0);
 				} else if (Input.GetKeyDown (KeyCode.RightArrow)) {
 					//Right
 					keysON = false;
@@ -230,7 +230,7 @@ public class BoardManager : MonoBehaviour {
 					GameObject boto = GameObject.Find("RIGHTbutton") as GameObject;
 					BoardFunctions.highlightButton(boto);
 					GameFunctions.setTimeStamp ();
-					GameManager.changeToNextScene (itemClicks,1,1);
+					GameManager.changeToNextScene (itemClicks,1,1,0);
 				}
 			} else if (randomYes == 0) {
 				if (Input.GetKeyDown (KeyCode.LeftArrow)) {
@@ -240,7 +240,7 @@ public class BoardManager : MonoBehaviour {
 					GameObject boto = GameObject.Find("LEFTbutton") as GameObject;
 					BoardFunctions.highlightButton(boto);
 					GameFunctions.setTimeStamp ();
-					GameManager.changeToNextScene (itemClicks,1,0);
+					GameManager.changeToNextScene (itemClicks,1,0,0);
 				} else if (Input.GetKeyDown (KeyCode.RightArrow)) {
 					//Right
 					keysON = false;
@@ -248,13 +248,13 @@ public class BoardManager : MonoBehaviour {
 					GameObject boto = GameObject.Find("RIGHTbutton") as GameObject;
 					BoardFunctions.highlightButton(boto);
 					GameFunctions.setTimeStamp ();
-					GameManager.changeToNextScene (itemClicks,0,0);
+					GameManager.changeToNextScene (itemClicks,0,0,0);
 				}
 			}
 		} else if (GameManager.escena == "SetUp") {
 			if (Input.GetKeyDown (KeyCode.Space)) {
 				GameFunctions.setTimeStamp ();
-				GameManager.changeToNextScene (itemClicks,0,0);
+				GameManager.changeToNextScene (itemClicks,0,0,0);
 			}
 		}
 	}
@@ -270,11 +270,11 @@ public class BoardManager : MonoBehaviour {
 				DrawLine (ItemToLocate);
 			}
 			addcity (ItemToLocate);
-			itemClicks.Add (new Vector3 (ItemToLocate.CityNumber, GameManager.timeTrial - GameManager.tiempo,1));
+			itemClicks.Add (new Vector3 (ItemToLocate.CityNumber, GameManager.timeQuestion - GameManager.tiempo,1));
 			SetDistanceText ();
 		} else if (previouscities.Last () == ItemToLocate.CityNumber) {
 			EraseLine (ItemToLocate);
-			itemClicks.Add (new Vector3 (ItemToLocate.CityNumber, GameManager.timeTrial - GameManager.tiempo,0));
+			itemClicks.Add (new Vector3 (ItemToLocate.CityNumber, GameManager.timeQuestion - GameManager.tiempo,0));
 		}
 	}
 
@@ -416,6 +416,6 @@ public class BoardManager : MonoBehaviour {
 		previouscities.Clear();
 		SetDistanceText ();
 		citiesvisited = 0;
-		itemClicks.Add (new Vector3 (100, GameManager.timeTrial - GameManager.tiempo,3));
+		itemClicks.Add (new Vector3 (100, GameManager.timeQuestion - GameManager.tiempo,3));
 	}
 }

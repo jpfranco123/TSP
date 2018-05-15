@@ -20,11 +20,14 @@ public class GameManager : MonoBehaviour
 	//Current Scene
 	public static string escena;
 
-	//Time spent so far on this scene
+	//Time Left on this scene
 	public static float tiempo;
 
 	//Total time for this scene
 	public static float totalTime;
+
+	//Time spent at the instance
+	public static float timeSkip;
 
 	//Current trial initialization
 	public static int trial = 0;
@@ -45,9 +48,9 @@ public class GameManager : MonoBehaviour
 	public static float timeRest2=10;
 
 	//Time given for each trial (The total time the items are shown -With and without the question-)
-	public static float timeTrial=10;
+	//public static float timeTrial=10;
 
-	//Time for seeing the TSP question 
+	//Time for seeing the game instance
 	public static float timeQuestion=10;
 
 	//Time given for answering 
@@ -256,7 +259,7 @@ public class GameManager : MonoBehaviour
 	}
 
 	//Takes care of changing the Scene to the next one (Except for when in the setup scene)
-	public static void changeToNextScene(List <Vector3> itemClicks, int answer, int randomYes)
+	public static void changeToNextScene(List <Vector3> itemClicks, int answer, int randomYes, int skipped)
 	{
 		BoardManager.keysON = false;
 		if (escena == "SetUp") {
@@ -265,15 +268,19 @@ public class GameManager : MonoBehaviour
 			InputOutputManager.loadGame ();
 			SceneManager.LoadScene ("Trial");
 		} else if (escena == "Trial") {
-			//66 Update distanceTravelled Value or delete to previous code...
 			Distancetravelled = BoardManager.distanceTravelledValue;
+
+			if (skipped == 1) {
+				timeSkip = timeQuestion - tiempo;
+			} else {
+				timeSkip = timeQuestion;
+			}
+
 			SceneManager.LoadScene ("TrialAnswer");
 		} else if (escena == "TrialAnswer") {
 			string itemsSelected= extractItemsSelected (itemClicks);
-			if (answer == 2) {
-				InputOutputManager.save(itemsSelected, answer, timeQuestion, randomYes, "");
-			} else {
-				InputOutputManager.save (itemsSelected, answer, timeAnswer - tiempo, randomYes, "");
+			InputOutputManager.save(itemsSelected, answer, timeSkip, randomYes, "");
+			if (answer != 2) {
 				InputOutputManager.saveTimeStamp ("ParticipantAnswer");
 			}
 			InputOutputManager.saveClicks (itemClicks);
@@ -340,7 +347,7 @@ public class GameManager : MonoBehaviour
 		if(tiempo < 0)
 		{
 			//changeToNextScene(2,BoardManager.randomYes);
-			changeToNextScene(BoardManager.itemClicks,BoardManager.answer,BoardManager.randomYes);
+			changeToNextScene(BoardManager.itemClicks,BoardManager.answer,BoardManager.randomYes,0);
 		}
 	}
 		
