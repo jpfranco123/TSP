@@ -89,6 +89,7 @@ public class GameManager : MonoBehaviour
 
 		public string id;
 		public string type;
+		public string param;
 
 		public int solution;
 	}

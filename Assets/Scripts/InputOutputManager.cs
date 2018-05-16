@@ -218,8 +218,9 @@ public class InputOutputManager : MonoBehaviour {
 			game_instances [k-1].maxdistance = int.Parse (maxdistanceS);
 			game_instances [k-1].solution = int.Parse (solutionS);
 
-			dict.TryGetValue ("MZN", out game_instances [k - 1].id);//CHANGE
-			dict.TryGetValue ("param", out game_instances [k - 1].type);
+			dict.TryGetValue ("MZN", out game_instances [k - 1].id);
+			dict.TryGetValue ("param", out game_instances [k - 1].param);
+			dict.TryGetValue ("type", out game_instances [k - 1].type);
 		}
 
 		return(game_instances);
@@ -236,7 +237,7 @@ public class InputOutputManager : MonoBehaviour {
 		string[] lines3 = new string[numberOfInstances+2];
 		//the first two lines will show the following - "string": "parameter/input"
 		lines3[0]="PartcipantID:" + participantID;
-		lines3 [1] = "instanceNumber" + ";cx"  + ";cy"   + ";distances" + ";id" + ";type" + ";sol" + ";max_distance" + ";nCities";
+		lines3 [1] = "instanceNumber" + ";cx"  + ";cy"   + ";distances" + ";id" + ";type" + ";sol" + ";max_distance" + ";nCities" + ";param" + ";type" ;
 
 		int l = 2;
 		int tspn = 1;
@@ -247,7 +248,7 @@ public class InputOutputManager : MonoBehaviour {
 			//With instance type and problem ID
 			lines3 [l] = tspn + ";" + string.Join (",", tsp.coordinatesx.Select (p => p.ToString ()).ToArray ())  + ";" + string.Join (",", tsp.coordinatesy.Select (p => p.ToString ()).ToArray ()) 
 				+ ";" + string.Join (",", tsp.distancevector.Select (p => p.ToString ()).ToArray ()) 
-				+ ";" + tsp.id + ";" + tsp.type + ";" + tsp.solution + ";" + tsp.maxdistance + ";" + tsp.ncities;
+				+ ";" + tsp.id + ";" + tsp.type + ";" + tsp.solution + ";" + tsp.maxdistance + ";" + tsp.ncities + ";" + tsp.param ";" + tsp.type;
 			l++;
 			tspn++;
 		}
