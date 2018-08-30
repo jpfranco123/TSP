@@ -84,8 +84,8 @@ public class BoardManager : MonoBehaviour {
 
 	// The list of all the button clicks on items. Each event contains the following information:
 	// ItemNumber (a number between 1 and the number of items. It corresponds to the index in the weight's (and value's) vector.)
-	// Item is being selected In/Out (1/0) 
-	// Time of the click with respect to the beginning of the trial 
+	// Item is being selected In/Out (1/0)
+	// Time of the click with respect to the beginning of the trial
 	public static List <Vector3> itemClicks =  new List<Vector3> ();
 
 	public GameObject[] lines= new GameObject[100];
@@ -107,7 +107,7 @@ public class BoardManager : MonoBehaviour {
 		rows=Int32.Parse(rowsS);
 
 	}
-		
+
 	//Initializes the instance for this trial:
 	//1. Sets the question string using the instance (from the .txt files)
 	//2. The weight and value vectors are uploaded
@@ -179,7 +179,7 @@ public class BoardManager : MonoBehaviour {
 	/// Macro function that initializes the Board
 	public void SetupScene(string sceneToSetup)
 	{
-		if (sceneToSetup == "Trial") 
+		if (sceneToSetup == "Trial")
 		{
 			previouscities.Clear();
 			itemClicks.Clear ();
@@ -199,9 +199,9 @@ public class BoardManager : MonoBehaviour {
 		}
 
 	}
-		
+
 	//Sets the triggers for pressing the corresponding keys
-	//123: Perhaps a good practice thing to do would be to create a "close scene" function that takes as parameter the answer and closes everything (including keysON=false) and then forwards to 
+	//123: Perhaps a good practice thing to do would be to create a "close scene" function that takes as parameter the answer and closes everything (including keysON=false) and then forwards to
 	//changeToNextScene(answer) on game manager
 	//necessary: this was imported from decision version
 	private void setKeyInput(){
@@ -211,7 +211,7 @@ public class BoardManager : MonoBehaviour {
 				InputOutputManager.saveTimeStamp ("ParticipantSkip");
 				GameManager.changeToNextScene (itemClicks,0,0,1);
 			}
-		} else if (GameManager.escena == "TrialAnswer") 
+		} else if (GameManager.escena == "TrialAnswer")
 		{
 			//1: No/Yes 0: Yes/No
 			if (randomYes == 1) {
@@ -279,15 +279,15 @@ public class BoardManager : MonoBehaviour {
 	}
 
 	// Use this for initialization
-	void Start () 
+	void Start ()
 	{
 
 	}
 
 	// Update is called once per frame
-	void Update () 
+	void Update ()
 	{
-		if (keysON) 
+		if (keysON)
 		{
 			setKeyInput ();
 		}
@@ -295,9 +295,9 @@ public class BoardManager : MonoBehaviour {
 	}
 
 
-	/// 
+	///
 	/// TSP-Specific Board functions:
-	/// 
+	///
 
 	void addcity(Item ItemToLocate)
 	{
@@ -331,14 +331,14 @@ public class BoardManager : MonoBehaviour {
 		distanceTravelledValue = distancetravelled;
 		return distancetravelled;
 	}
-		
+
 	void SetDistanceText ()
 	{
 		Debug.Log ("SetDistanceText");
 		int distanceT = distancetravelled();
 		DistanceText.text = "Distance so far: " + distanceT.ToString () + "km";
 	}
-		
+
 	//determining whether the city is the first one to have been clicked in that instance i.e. where is the starting point
 	bool CityFirst(int citiesvisited)
 	{
@@ -346,8 +346,8 @@ public class BoardManager : MonoBehaviour {
 		{
 			return true;
 		}
-		else 
-		{			
+		else
+		{
 			return false;
 		}
 	}
@@ -359,8 +359,8 @@ public class BoardManager : MonoBehaviour {
 		myLight.enabled = !myLight.enabled;
 		//int cityIn=(myLight.enabled)? 1 : 0 ;
 	}
-		
-	void DrawLine(Item ItemToLocate) 
+
+	void DrawLine(Item ItemToLocate)
 	{
 		int cityofdestination = ItemToLocate.CityNumber;
 		int cityofdeparture = previouscities[previouscities.Count()-1];
@@ -371,7 +371,7 @@ public class BoardManager : MonoBehaviour {
 		Vector3[] coordinates = new Vector3[2];
 		coordinates [0] = coordestination;
 		coordinates [1] = coordeparture;
-			
+
 		GameObject instance = Instantiate (LineItemPrefab, new Vector2(0,0), Quaternion.identity) as GameObject;
 
 		canvas=GameObject.Find("Canvas");
@@ -409,13 +409,16 @@ public class BoardManager : MonoBehaviour {
 	}
 
 	public void ResetClicked(){
-		for (int i = 0; i < lines.Length; i++) {
-			DestroyObject (lines [i]);
+		if (previouscities.Count() != 0)
+		{
+			for (int i = 0; i < lines.Length; i++) {
+				DestroyObject (lines [i]);
+			}
+			Lightoff();
+			previouscities.Clear();
+			SetDistanceText ();
+			citiesvisited = 0;
+			itemClicks.Add (new Vector3 (100, GameManager.timeQuestion - GameManager.tiempo,3));
 		}
-		Lightoff();
-		previouscities.Clear();
-		SetDistanceText ();
-		citiesvisited = 0;
-		itemClicks.Add (new Vector3 (100, GameManager.timeQuestion - GameManager.tiempo,3));
 	}
 }
