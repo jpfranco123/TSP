@@ -4,6 +4,10 @@ This task is based on the traveling salesperson problem (TSP). Given a set of N 
 
 In the TSP task, each trial presents a different instance of TSP. Trials are self-paced with a time limit. Participants can use the mouse to trace routes by clicking on the dots indicating the different cities. The length of the chosen route is indicated at the top of the screen (together with the maximum route length of the instance). When participants are ready to submit their answer, they press a button to advance from the screen displaying the cities to the response screen where they responded YES or NO. The time limit to respond is set by the experimenter as well as the inter-trial interval . The order of instances and the sides of the YES/NO button on the response screen is randomized.
 
+
+![image](TSP.png)
+
+
 ## SETUP
 
 Input/Output data folders are located in Assets/DataInf. This folder has to be added manually to the game after building. 
