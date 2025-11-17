@@ -30,7 +30,7 @@ public class GameFunctions : MonoBehaviour {
 		InputField.SubmitEvent se = new InputField.SubmitEvent();
 		//se.AddListener(submitPID(start));
 		se.AddListener((value)=>submitPID(value,start,rand));
-		pID.onEndEdit = se;
+		pID.onSubmit = se;
 
 
 		//Randomisation Input
@@ -39,7 +39,7 @@ public class GameFunctions : MonoBehaviour {
 		InputField.SubmitEvent se2 = new InputField.SubmitEvent();
 		//se.AddListener(submitPID(start));
 		se2.AddListener((value)=>submitRandID(value,start));
-		rID.onEndEdit = se2;
+		rID.onSubmit = se2;
 
 		//pID.onSubmit.AddListener((value) => submitPID(value));
 

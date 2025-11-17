@@ -37,6 +37,8 @@ public class BoardManager : MonoBehaviour {
 	//Counter
 	public Text DistanceText;
 
+	public Sprite CityVisitedSprite;
+
 	//Coordinate vectors for this trial. CURRENTLY SET UP TO ALLOW ONLY INTEGERS.
 	private float[] cox;
 	private float[] coy;
@@ -71,6 +73,8 @@ public class BoardManager : MonoBehaviour {
 		public Vector2 center;
 		public int CityNumber;
 		public Button CityButton;
+		public Image CityImage;
+		public Sprite VacantSprite;
 	}
 //	public Button LineButton;
 
@@ -162,7 +166,13 @@ public class BoardManager : MonoBehaviour {
 
 		Item ItemInstance = new Item();
 		ItemInstance.gameItem = instance;//.gameObject;
+
+		// allow changes of sprite upon clicks
 		ItemInstance.CityButton = ItemInstance.gameItem.GetComponent<Button> ();
+		ItemInstance.CityImage = ItemInstance.gameItem.GetComponent<Image> (); 
+		ItemInstance.VacantSprite = ItemInstance.CityImage.sprite;
+		ItemInstance.CityImage.alphaHitTestMinimumThreshold = 0.1f; // This makes your click detection "round", matching the sprite.
+
 		ItemInstance.CityNumber = cities[ItemNumber];
 		ItemInstance.center = randomPosition;
 
@@ -269,6 +279,11 @@ public class BoardManager : MonoBehaviour {
 			} else {
 				DrawLine (ItemToLocate);
 			}
+			// 1. Disable the button's transitions so it stops fighting us
+			ItemToLocate.CityButton.transition = Selectable.Transition.None;
+			// 2. Set the sprite directly
+			ItemToLocate.CityImage.sprite = CityVisitedSprite;
+		
 			addcity (ItemToLocate);
 			itemClicks.Add (new Vector3 (ItemToLocate.CityNumber, GameManager.timeQuestion - GameManager.tiempo,1));
 			SetDistanceText ();
@@ -392,6 +407,9 @@ public class BoardManager : MonoBehaviour {
 		if (previouscities.Count == 1) {
 			ItemToLocate.gameItem.GetComponent<Light> ().enabled = false;
 		}
+		ItemToLocate.CityButton.transition = Selectable.Transition.SpriteSwap;
+		ItemToLocate.CityImage.sprite = ItemToLocate.VacantSprite;
+
 		Destroy (lines[citiesvisited-1]);
 		previouscities.RemoveAt (previouscities.Count () - 1);
 		citiesvisited --;
@@ -399,10 +417,19 @@ public class BoardManager : MonoBehaviour {
 
 	}
 
-	private void Lightoff(){
-		foreach(Item Item1 in Items){
-			if (Item1.CityNumber == previouscities[0]){
-				Light myLight = Item1.gameItem.GetComponent<Light> ();
+	private void ResetAllCityVisuals(){
+		// Find the first city to turn off its light
+		int firstCityNum = previouscities[0];
+
+		foreach(Item item in Items){
+			// 1. Re-enable transitions for all items
+			item.CityButton.transition = Selectable.Transition.SpriteSwap;
+			// 2. Reset sprite to null for all items
+			item.CityImage.sprite = item.VacantSprite;
+
+			// Turn off light if it's the first city
+			if (item.CityNumber == firstCityNum){
+				Light myLight = item.gameItem.GetComponent<Light> ();
 				myLight.enabled = false;
 			}
 		}
@@ -414,7 +441,7 @@ public class BoardManager : MonoBehaviour {
 			for (int i = 0; i < lines.Length; i++) {
 				DestroyObject (lines [i]);
 			}
-			Lightoff();
+			ResetAllCityVisuals();
 			previouscities.Clear();
 			SetDistanceText ();
 			citiesvisited = 0;

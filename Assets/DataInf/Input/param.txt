@@ -1,4 +1,4 @@
-timeRest1:3
-timeRest2:30
+timeRest1:0
+timeRest2:5
 timeQuestion:60
 timeAnswer:3
