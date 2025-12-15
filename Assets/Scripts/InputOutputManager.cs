@@ -23,9 +23,9 @@ public class InputOutputManager : MonoBehaviour {
 	private static string identifierName;
 
 	//Input and Outout Folders with respect to the Application.dataPath;
-	private static string inputFolder = "/DATAinf/Input/";
-	private static string inputFolderInstances = "/DATAinf/Input/Instances/";
-	private static string outputFolder = "/DATAinf/Output/";
+	private static string inputFolder = "DATAinf/Input/";
+	private static string inputFolderInstances = "DATAinf/Input/Instances/";
+	private static string outputFolder = "DATAinf/Output/";
 
 	// Complete folder path of the inputs and ouputs
 	private static string folderPathLoad;
@@ -36,9 +36,23 @@ public class InputOutputManager : MonoBehaviour {
 
 		identifierName = participantID + "_" + dateID + "_" + "TSP" + "_";
 
-		folderPathLoad = Application.dataPath + inputFolder;
-		folderPathLoadInstances = Application.dataPath + inputFolderInstances;
-		folderPathSave = Application.dataPath + outputFolder;
+		folderPathLoad = Path.Combine(Application.streamingAssetsPath, inputFolder);
+		folderPathLoadInstances = Path.Combine(Application.streamingAssetsPath, inputFolderInstances);
+		
+		string safeSaveRoot = Path.Combine(Application.persistentDataPath, "DATAinf");
+        string safeSaveOutput = Path.Combine(safeSaveRoot, "Output");
+
+		if (!Directory.Exists(safeSaveOutput))
+        {
+            Directory.CreateDirectory(safeSaveOutput);
+        }
+		// We add a slash at the end to match your original logic
+        folderPathSave = safeSaveOutput + "/";
+
+        Debug.Log("Loading from: " + folderPathLoad);
+        Debug.Log("Saving to: " + folderPathSave);
+		
+		//folderPathSave = Application.dataPath + outputFolder;
 
 		Dictionary<string, string> dict = loadParameters ();
 		GameManager.assignVariables(dict);
@@ -232,6 +246,9 @@ public class InputOutputManager : MonoBehaviour {
 	/// </summary>
 	private static void saveInstanceInfo(int numberOfInstances, GameManager.gameInstance[] instances)
 	{
+		string folderPathSave = Path.Combine(Application.persistentDataPath, "DATAinf", "Output");
+	    if (!Directory.Exists(folderPathSave)) Directory.CreateDirectory(folderPathSave);
+
 		//Saves instance info
 		//an array of string, a new variable called lines3
 		string[] lines3 = new string[numberOfInstances+2];
@@ -253,7 +270,7 @@ public class InputOutputManager : MonoBehaviour {
 			tspn++;
 		}
 		//using StreamWriter to write the above into an output file
-		using (StreamWriter outputFile = new StreamWriter(folderPathSave + identifierName + "InstancesInfo.txt",true)) 
+		using (StreamWriter outputFile = new StreamWriter(Path.Combine(folderPathSave, identifierName + "InstancesInfo.txt"), true))
 		{
 			foreach (string line in lines3)
 				outputFile.WriteLine(line);
@@ -269,11 +286,14 @@ public class InputOutputManager : MonoBehaviour {
 	/// </summary>
 	private static void saveHeaders()
 	{
+		string folderPathSave = Path.Combine(Application.persistentDataPath, "DATAinf", "Output");
+    	if (!Directory.Exists(folderPathSave)) Directory.CreateDirectory(folderPathSave);
+
 		// Trial Info file headers
 		string[] lines = new string[2];
 		lines[0]="PartcipantID:" + participantID;
 		lines [1] = "block;trial;answer;correct;timeSpent;itemsSelected;finaldistance;randomYes(1=Left:No/Right:Yes);instanceNumber;error";
-		using (StreamWriter outputFile = new StreamWriter(folderPathSave + identifierName + "TrialInfo.txt",true)) 
+		using (StreamWriter outputFile = new StreamWriter(Path.Combine(folderPathSave, identifierName + "TrialInfo.txt"),true))
 		{
 			foreach (string line in lines)
 				outputFile.WriteLine(line);
@@ -285,7 +305,7 @@ public class InputOutputManager : MonoBehaviour {
 		lines1[0]="PartcipantID:" + participantID;
 		lines1[1] = "InitialTimeStamp:" + GameFunctions.initialTimeStamp;
 		lines1[2]="block;trial;eventType;elapsedTime";
-		using (StreamWriter outputFile = new StreamWriter(folderPathSave + identifierName + "TimeStamps.txt",true)) 
+		using (StreamWriter outputFile = new StreamWriter(Path.Combine(folderPathSave, identifierName + "TimeStamps.txt"),true))
 		{
 			foreach (string line in lines1)
 				outputFile.WriteLine(line);
@@ -296,7 +316,7 @@ public class InputOutputManager : MonoBehaviour {
 		lines2[0]="PartcipantID:" + participantID;
 		lines2[1] = "InitialTimeStamp:" + GameFunctions.initialTimeStamp;
 		lines2[2]="block;trial;citynumber(100=Reset);In(1)/Out(0)/Reset(3);time"; 
-		using (StreamWriter outputFile = new StreamWriter(folderPathSave + identifierName + "Clicks.txt",true)) {
+		using (StreamWriter outputFile = new StreamWriter(Path.Combine(folderPathSave, identifierName + "Clicks.txt"),true)) {
 			foreach (string line in lines2)
 				outputFile.WriteLine(line);
 		}
@@ -327,11 +347,15 @@ public class InputOutputManager : MonoBehaviour {
 
 		//where to save
 		string[] lines = {dataTrialText};
-		string folderPathSave = Application.dataPath + outputFolder;
+		string folderPathSave = Path.Combine(Application.persistentDataPath, "DATAinf", "Output");
+		if (!Directory.Exists(folderPathSave)) {
+			Directory.CreateDirectory(folderPathSave);
+		}
+		string fullPath = Path.Combine(folderPathSave, identifierName + "TrialInfo.txt");
 
 		//This location can be used by unity to save a file if u open the game in any platform/computer:      Application.persistentDataPath;
 
-		using (StreamWriter outputFile = new StreamWriter(folderPathSave + identifierName +"TrialInfo.txt",true)) 
+		using (StreamWriter outputFile = new StreamWriter(fullPath,true)) 
 		{
 			foreach (string line in lines)
 				outputFile.WriteLine(line);
@@ -351,10 +375,14 @@ public class InputOutputManager : MonoBehaviour {
 		string dataTrialText = GameManager.block + ";" + GameManager.trial + ";" + eventType + ";" + GameFunctions.timeStamp();
 
 		string[] lines = {dataTrialText};
-		string folderPathSave = Application.dataPath + outputFolder;
+		string folderPathSave = Path.Combine(Application.persistentDataPath, "DATAinf", "Output");
+		if (!Directory.Exists(folderPathSave)) {
+			Directory.CreateDirectory(folderPathSave);
+		}
+		string fullPath = Path.Combine(folderPathSave, identifierName + "TimeStamps.txt");
 
 		//This location can be used by unity to save a file if u open the game in any platform/computer:      Application.persistentDataPath;
-		using (StreamWriter outputFile = new StreamWriter(folderPathSave + identifierName + "TimeStamps.txt",true)) 
+		using (StreamWriter outputFile = new StreamWriter(fullPath,true)) 
 		{
 			foreach (string line in lines)
 				outputFile.WriteLine(line);
@@ -369,7 +397,11 @@ public class InputOutputManager : MonoBehaviour {
 	/// block ; trial ; clicklist (i.e. item number ; itemIn? (1: selcting; 0:deselecting) ; time of the click with respect to the begining of the trial)
 	public static void saveClicks(List<Vector3> clicksList) {
 
-		string folderPathSave = Application.dataPath + outputFolder;
+		string folderPathSave = Path.Combine(Application.persistentDataPath, "DATAinf", "Output");
+		if (!Directory.Exists(folderPathSave)) {
+			Directory.CreateDirectory(folderPathSave);
+		}
+		string fullPath = Path.Combine(folderPathSave, identifierName + "Clicks.txt");
 
 
 		string[] lines = new string[clicksList.Count];
@@ -379,7 +411,7 @@ public class InputOutputManager : MonoBehaviour {
 			i++;
 		}
 		//This location can be used by unity to save a file if u open the game in any platform/computer:      Application.persistentDataPath;
-		using (StreamWriter outputFile = new StreamWriter(folderPathSave + identifierName + "Clicks.txt",true)) {
+		using (StreamWriter outputFile = new StreamWriter(fullPath,true)) {
 			foreach (string line in lines)
 				outputFile.WriteLine(line);
 		} 

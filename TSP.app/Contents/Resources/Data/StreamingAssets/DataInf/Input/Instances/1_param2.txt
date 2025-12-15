@@ -1,0 +1,4 @@
+numberOfTrials:2
+numberOfBlocks:2
+numberOfInstances:4
+instanceRandomization:[1,2,3,4]
